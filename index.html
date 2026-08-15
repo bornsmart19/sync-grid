@@ -1,393 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta charset="UTF-8">
+    <title>SyncGrid</title>
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="syncgrid-globe.png" />
 
-<title>SyncGrid</title>
+    <meta
+      name="google-site-verification"
+      content="X3s00fOcjY8ke9qHZJv2_L3iv6HP38z9w2WlkYYrfzM"
+    />
 
-<link rel="icon" type="image/png" href="syncgrid-globe.png">
+    <meta
+      name="description"
+      content="Interactive global time zone dashboard for remote teams."
+    />
 
-<meta name="description"
-content="Interactive global time zone dashboard for remote teams.">
+    <meta name="theme-color" content="#0B1220" />
 
-<meta name="theme-color"
-content="#0B1220">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<link rel="stylesheet"
-href="style.css">
+  <body>
+    <div id="overlay" class="overlay"></div>
 
-</head>
-
-<body>
-
-<div id="overlay" class="overlay"></div>
-
-<div class="app">
-
-    <!-- ==========================
+    <div class="app">
+      <!-- ==========================
          LEFT SIDEBAR
     =========================== -->
 
-    <aside id="sidebar" class="sidebar">
-
+      <aside id="sidebar" class="sidebar">
         <div class="logo">
+          <div class="logo-box">
+            <img src="syncgrid-globe.png" alt="SyncGrid" />
+          </div>
 
-            <div class="logo-box">
-    <img
-        src="syncgrid-globe.png"
-        alt="SyncGrid"
-    >
-</div>
+          <div>
+            <h2>SyncGrid</h2>
 
-            <div>
-
-                <h2>SyncGrid</h2>
-
-                <p>
-                    Know when the world is awake.
-                </p>
-
-            </div>
-
+            <p>Know when the world is awake.</p>
+          </div>
         </div>
 
-        <button
-            id="newTeamBtn"
-            class="primary-btn">
-
-            + New Team
-
-        </button>
+        <button id="newTeamBtn" class="primary-btn">+ New Team</button>
 
         <section class="sidebar-group">
+          <h3>Saved Teams</h3>
 
-            <h3>
+          <div id="teamList">
+            <button class="team-item active">🌍 Global</button>
 
-                Saved Teams
+            <button class="team-item">💻 Developers</button>
 
-            </h3>
-
-            <div id="teamList">
-
-                <button class="team-item active">
-
-                    🌍 Global
-
-                </button>
-
-                <button class="team-item">
-
-                    💻 Developers
-
-                </button>
-
-                <button class="team-item">
-
-                    🎨 Designers
-
-                </button>
-
-            </div>
-
+            <button class="team-item">🎨 Designers</button>
+          </div>
         </section>
 
         <section class="sidebar-group">
+          <h3>Quick Actions</h3>
 
-            <h3>
+          <button id="sidebarAddCity" class="side-btn">➕ Add City</button>
 
-                Quick Actions
+          <button id="plannerBtn" class="side-btn">📅 Planner</button>
 
-            </h3>
-
-            <button
-                id="sidebarAddCity"
-                class="side-btn">
-
-                ➕ Add City
-
-            </button>
-
-            <button
-                id="plannerBtn"
-                class="side-btn">
-
-                📅 Planner
-
-            </button>
-
-            <button
-                id="settingsBtn"
-                class="side-btn">
-
-                ⚙ Settings
-
-            </button>
-
+          <button id="settingsBtn" class="side-btn">⚙ Settings</button>
         </section>
+      </aside>
 
-    </aside>
-
-    <!-- ==========================
+      <!-- ==========================
          MAIN LAYOUT
     =========================== -->
 
-    <div class="content-layout">
-
+      <div class="content-layout">
         <!-- ======================
              MAIN CONTENT
         ======================= -->
 
         <main class="main-content">
+          <header class="topbar">
+            <div class="topbar-left">
+              <button id="menuBtn" class="icon-btn">☰</button>
 
-            <header class="topbar">
+              <div>
+                <h1>Global Dashboard</h1>
 
-                <div class="topbar-left">
+                <p>Schedule smarter across time zones.</p>
+              </div>
+            </div>
 
-                    <button
-                        id="menuBtn"
-                        class="icon-btn">
+            <div class="topbar-right">
+              <div class="utc-card">
+                <span> UTC </span>
 
-                        ☰
+                <strong id="utcTime"> --:--:-- </strong>
+              </div>
 
-                    </button>
+              <button id="themeToggle" class="icon-btn">🌙</button>
+            </div>
+          </header>
 
-                    <div>
+          <section class="hero">
+            <h2>Find the perfect overlap across the world.</h2>
 
-                        <h1>
+            <p>
+              Compare cities, visualize working hours, and instantly know when
+              everyone is available.
+            </p>
+          </section>
 
-                            Global Dashboard
+          <section class="controls">
+            <div class="search-wrapper">
+              <input id="citySearch" type="text" placeholder="Search city..." />
 
-                        </h1>
+              <div id="searchSuggestions" class="search-suggestions"></div>
+            </div>
 
-                        <p>
+            <button id="addCity" class="primary-btn">Add City</button>
+          </section>
 
-                            Schedule smarter across time zones.
+          <section class="summary-grid">
+            <article class="summary-card">
+              <span> Best Meeting </span>
 
-                        </p>
+              <h3 id="bestMeetingTime">--</h3>
+            </article>
 
-                    </div>
+            <article class="summary-card">
+              <span> Working </span>
 
-                </div>
+              <h3 id="workingCount">0</h3>
+            </article>
 
-                <div class="topbar-right">
+            <article class="summary-card">
+              <span> Awake </span>
 
-                    <div class="utc-card">
+              <h3 id="awakeCount">0</h3>
+            </article>
 
-                        <span>
+            <article class="summary-card">
+              <span> Cursor </span>
 
-                            UTC
+              <h3 id="cursorTime">--:--</h3>
+            </article>
+          </section>
 
-                        </span>
+          <section class="timeline-panel">
+            <div class="timeline-toolbar">
+              <h3>Global Timeline</h3>
 
-                        <strong id="utcTime">
+              <div class="timeline-buttons">
+                <button id="todayBtn" class="secondary-btn">Today</button>
 
-                            --:--:--
+                <button id="resetBtn" class="secondary-btn">Reset</button>
+              </div>
+            </div>
 
-                        </strong>
+            <div id="timelineWrapper" class="timeline-wrapper">
+              <div id="timelineCursor" class="timeline-cursor"></div>
 
-                    </div>
+              <div id="timelineHeader" class="timeline-header"></div>
 
-                    <button
-                        id="themeToggle"
-                        class="icon-btn">
-
-                        🌙
-
-                    </button>
-
-                </div>
-
-            </header>
-
-            <section class="hero">
-
-                <h2>
-
-                    Find the perfect overlap
-                    across the world.
-
-                </h2>
-
-                <p>
-
-                    Compare cities, visualize working hours,
-                    and instantly know when everyone is available.
-
-                </p>
-
-            </section>
-
-            <section class="controls">
-
-                <div class="search-wrapper">
-
-                    <input
-
-                        id="citySearch"
-
-                        type="text"
-
-                        placeholder="Search city...">
-
-                    <div
-                        id="searchSuggestions"
-                        class="search-suggestions">
-
-                    </div>
-
-                </div>
-
-                <button
-                    id="addCity"
-                    class="primary-btn">
-
-                    Add City
-
-                </button>
-
-            </section>
-
-            <section class="summary-grid">
-
-                <article class="summary-card">
-
-                    <span>
-
-                        Best Meeting
-
-                    </span>
-
-                    <h3 id="bestMeetingTime">
-
-                        --
-
-                    </h3>
-
-                </article>
-
-                <article class="summary-card">
-
-                    <span>
-
-                        Working
-
-                    </span>
-
-                    <h3 id="workingCount">
-
-                        0
-
-                    </h3>
-
-                </article>
-
-                <article class="summary-card">
-
-                    <span>
-
-                        Awake
-
-                    </span>
-
-                    <h3 id="awakeCount">
-
-                        0
-
-                    </h3>
-
-                </article>
-
-                <article class="summary-card">
-
-                    <span>
-
-                        Cursor
-
-                    </span>
-
-                    <h3 id="cursorTime">
-
-                        --:--
-
-                    </h3>
-
-                </article>
-
-            </section>
-
-            <section class="timeline-panel">
-
-                <div class="timeline-toolbar">
-
-                    <h3>
-
-                        Global Timeline
-
-                    </h3>
-
-                    <div class="timeline-buttons">
-
-                        <button
-                            id="todayBtn"
-                            class="secondary-btn">
-
-                            Today
-
-                        </button>
-
-                        <button
-                            id="resetBtn"
-                            class="secondary-btn">
-
-                            Reset
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <div
-                    id="timelineWrapper"
-                    class="timeline-wrapper">
-
-                    <div
-                        id="timelineCursor"
-                        class="timeline-cursor">
-
-                    </div>
-
-                    <div
-                        id="timelineHeader"
-                        class="timeline-header">
-
-                    </div>
-
-                    <div
-                        id="timelineBody"
-                        class="timeline-body">
-
-                    </div>
-
-                </div>
-
-            </section>
-
+              <div id="timelineBody" class="timeline-body"></div>
+            </div>
+          </section>
         </main>
 
         <!-- RIGHT DASHBOARD STARTS IN PHASE 1B -->
@@ -396,149 +183,101 @@ href="style.css">
         =========================== -->
 
         <aside class="right-dashboard">
+          <!-- AI SUMMARY -->
 
-            <!-- AI SUMMARY -->
+          <section class="dashboard-card">
+            <div class="card-header">
+              <h3>🤖 AI Summary</h3>
 
-            <section class="dashboard-card">
+              <span class="live-indicator"></span>
+            </div>
 
-                <div class="card-header">
+            <p id="aiSummary">Waiting for timeline data...</p>
+          </section>
 
-                    <h3>🤖 AI Summary</h3>
+          <!-- LIVE STATUS -->
 
-                    <span class="live-indicator"></span>
+          <section class="dashboard-card">
+            <div class="card-header">
+              <h3>🌍 Live Status</h3>
+            </div>
 
-                </div>
+            <div class="status-list">
+              <div class="status-item">
+                <span>🟢 Working</span>
 
-                <p id="aiSummary">
+                <strong id="workingNow">0</strong>
+              </div>
 
-                    Waiting for timeline data...
+              <div class="status-item">
+                <span>🟡 Awake</span>
 
-                </p>
+                <strong id="awakeNow">0</strong>
+              </div>
 
-            </section>
+              <div class="status-item">
+                <span>🔴 Sleeping</span>
 
-            <!-- LIVE STATUS -->
+                <strong id="sleepingNow">0</strong>
+              </div>
+            </div>
+          </section>
 
-            <section class="dashboard-card">
+          <!-- QUICK STATS -->
 
-                <div class="card-header">
+          <section class="dashboard-card">
+            <div class="card-header">
+              <h3>📊 Quick Stats</h3>
+            </div>
 
-                    <h3>🌍 Live Status</h3>
+            <div class="stats-grid">
+              <div class="mini-stat">
+                <span>Total Cities</span>
 
-                </div>
+                <strong id="totalCities">0</strong>
+              </div>
 
-                <div class="status-list">
+              <div class="mini-stat">
+                <span>Time Zones</span>
 
-                    <div class="status-item">
+                <strong id="timezoneCount">0</strong>
+              </div>
 
-                        <span>🟢 Working</span>
+              <div class="mini-stat">
+                <span>Best Overlap</span>
 
-                        <strong id="workingNow">0</strong>
+                <strong id="overlapHours">--</strong>
+              </div>
 
-                    </div>
+              <div class="mini-stat">
+                <span>Saved Teams</span>
 
-                    <div class="status-item">
+                <strong id="teamCount">3</strong>
+              </div>
+            </div>
+          </section>
 
-                        <span>🟡 Awake</span>
+          <!-- UPCOMING -->
 
-                        <strong id="awakeNow">0</strong>
+          <section class="dashboard-card">
+            <div class="card-header">
+              <h3>⏳ Upcoming</h3>
+            </div>
 
-                    </div>
+            <div id="upcomingEvents">
+              <div class="event-item">
+                <strong>No upcoming meetings</strong>
 
-                    <div class="status-item">
-
-                        <span>🔴 Sleeping</span>
-
-                        <strong id="sleepingNow">0</strong>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-            <!-- QUICK STATS -->
-
-            <section class="dashboard-card">
-
-                <div class="card-header">
-
-                    <h3>📊 Quick Stats</h3>
-
-                </div>
-
-                <div class="stats-grid">
-
-                    <div class="mini-stat">
-
-                        <span>Total Cities</span>
-
-                        <strong id="totalCities">0</strong>
-
-                    </div>
-
-                    <div class="mini-stat">
-
-                        <span>Time Zones</span>
-
-                        <strong id="timezoneCount">0</strong>
-
-                    </div>
-
-                    <div class="mini-stat">
-
-                        <span>Best Overlap</span>
-
-                        <strong id="overlapHours">--</strong>
-
-                    </div>
-
-                    <div class="mini-stat">
-
-                        <span>Saved Teams</span>
-
-                        <strong id="teamCount">3</strong>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-            <!-- UPCOMING -->
-
-            <section class="dashboard-card">
-
-                <div class="card-header">
-
-                    <h3>⏳ Upcoming</h3>
-
-                </div>
-
-                <div id="upcomingEvents">
-
-                    <div class="event-item">
-
-                        <strong>No upcoming meetings</strong>
-
-                        <span>Add cities to begin planning.</span>
-
-                    </div>
-
-                </div>
-
-            </section>
-
+                <span>Add cities to begin planning.</span>
+              </div>
+            </div>
+          </section>
         </aside>
-
+      </div>
+      <!-- End .content-layout -->
     </div>
-    <!-- End .content-layout -->
+    <!-- End .app -->
 
-</div>
-<!-- End .app -->
-
-<script src="script.js"></script>
-
-</body>
-
+    <script src="script.js"></script>
+  </body>
 </html>
