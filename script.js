@@ -2335,6 +2335,10 @@ function sgRenderTeams() {
   teamList.innerHTML = "";
 
   App.savedTeams.forEach((team) => {
+    const row = document.createElement("div");
+
+    row.className = "team-item-row";
+
     const button = document.createElement("button");
 
     button.type = "button";
@@ -2345,34 +2349,41 @@ function sgRenderTeams() {
     }
 
     button.dataset.teamId = team.id;
+    button.innerHTML = `
+      <span class="team-name">
+        ${team.icon} ${team.name}
+      </span>
+    `;
 
+    button.addEventListener("click", () => {
+      sgActivateTeam(team.id);
+    });
+
+    row.appendChild(button);
+
+    // Only custom teams can be deleted
     const isDefaultTeam =
       team.id === "global" ||
       team.id === "developers" ||
       team.id === "designers";
 
-    button.innerHTML = `
-      <span>${team.icon} ${team.name}</span>
-      ${
-        isDefaultTeam
-          ? ""
-          : `<span class="sg-delete-team" title="Delete team">×</span>`
-      }
-    `;
+    if (!isDefaultTeam) {
+      const deleteButton = document.createElement("button");
 
-    button.addEventListener("click", (event) => {
-      const deleteButton = event.target.closest(".sg-delete-team");
+      deleteButton.type = "button";
+      deleteButton.className = "team-delete-btn";
+      deleteButton.textContent = "×";
+      deleteButton.title = `Delete ${team.name}`;
 
-      if (deleteButton) {
+      deleteButton.addEventListener("click", (event) => {
         event.stopPropagation();
         sgDeleteTeam(team.id);
-        return;
-      }
+      });
 
-      sgActivateTeam(team.id);
-    });
+      row.appendChild(deleteButton);
+    }
 
-    teamList.appendChild(button);
+    teamList.appendChild(row);
   });
 
   updateBasicStats();
@@ -2380,6 +2391,71 @@ function sgRenderTeams() {
   if (typeof sgUpdateTeamCount === "function") {
     sgUpdateTeamCount();
   }
+}
+
+function sgDeleteTeam(teamId) {
+  const team = App.savedTeams.find(
+    (item) => item.id === teamId
+  );
+
+  if (!team) return;
+
+  const isDefaultTeam =
+    team.id === "global" ||
+    team.id === "developers" ||
+    team.id === "designers";
+
+  if (isDefaultTeam) {
+    return;
+  }
+
+  const confirmed = window.confirm(
+    `Delete "${team.name}"?\n\nThis cannot be undone.`
+  );
+
+  if (!confirmed) return;
+
+  const wasActive = team.name === App.activeTeam;
+
+  App.savedTeams = App.savedTeams.filter(
+    (item) => item.id !== teamId
+  );
+
+  sgSaveTeams();
+
+  if (wasActive) {
+    const globalTeam = App.savedTeams.find(
+      (item) => item.id === "global"
+    );
+
+    if (globalTeam) {
+      App.activeTeam = globalTeam.name;
+
+      saveToStorage(
+        STORAGE_KEYS.activeTeam,
+        App.activeTeam
+      );
+
+      const selectedCities = globalTeam.cities
+        .map((cityName) => findCity(cityName))
+        .filter(Boolean);
+
+      App.cities = selectedCities.map((city) => ({
+        ...city,
+      }));
+
+      saveToStorage(
+        STORAGE_KEYS.cities,
+        App.cities
+      );
+    }
+  }
+
+  sgRenderTeams();
+  renderTimeline();
+  updateBasicStats();
+  updateLiveStatus();
+  updateIntelligenceDashboard();
 }
 
 /* ==========================================================
