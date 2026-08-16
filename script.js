@@ -2338,7 +2338,6 @@ function sgRenderTeams() {
     const button = document.createElement("button");
 
     button.type = "button";
-
     button.className = "team-item";
 
     if (team.name === App.activeTeam) {
@@ -2347,9 +2346,29 @@ function sgRenderTeams() {
 
     button.dataset.teamId = team.id;
 
-    button.textContent = `${team.icon} ${team.name}`;
+    const isDefaultTeam =
+      team.id === "global" ||
+      team.id === "developers" ||
+      team.id === "designers";
 
-    button.addEventListener("click", () => {
+    button.innerHTML = `
+      <span>${team.icon} ${team.name}</span>
+      ${
+        isDefaultTeam
+          ? ""
+          : `<span class="sg-delete-team" title="Delete team">×</span>`
+      }
+    `;
+
+    button.addEventListener("click", (event) => {
+      const deleteButton = event.target.closest(".sg-delete-team");
+
+      if (deleteButton) {
+        event.stopPropagation();
+        sgDeleteTeam(team.id);
+        return;
+      }
+
       sgActivateTeam(team.id);
     });
 
@@ -2357,6 +2376,10 @@ function sgRenderTeams() {
   });
 
   updateBasicStats();
+
+  if (typeof sgUpdateTeamCount === "function") {
+    sgUpdateTeamCount();
+  }
 }
 
 /* ==========================================================
