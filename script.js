@@ -121,6 +121,7 @@ const CITY_DATABASE = [
     workEnd: 17,
     awakeStart: 7,
     awakeEnd: 23,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -131,6 +132,7 @@ const CITY_DATABASE = [
     workEnd: 17,
     awakeStart: 7,
     awakeEnd: 23,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -141,6 +143,7 @@ const CITY_DATABASE = [
     workEnd: 18,
     awakeStart: 6,
     awakeEnd: 23,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -151,6 +154,7 @@ const CITY_DATABASE = [
     workEnd: 17,
     awakeStart: 6,
     awakeEnd: 22,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -161,6 +165,7 @@ const CITY_DATABASE = [
     workEnd: 18,
     awakeStart: 6,
     awakeEnd: 22,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -171,6 +176,7 @@ const CITY_DATABASE = [
     workEnd: 17,
     awakeStart: 6,
     awakeEnd: 22,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -181,6 +187,7 @@ const CITY_DATABASE = [
     workEnd: 18,
     awakeStart: 6,
     awakeEnd: 23,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -191,6 +198,7 @@ const CITY_DATABASE = [
     workEnd: 17,
     awakeStart: 7,
     awakeEnd: 22,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -201,6 +209,7 @@ const CITY_DATABASE = [
     workEnd: 17,
     awakeStart: 7,
     awakeEnd: 23,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -211,6 +220,7 @@ const CITY_DATABASE = [
     workEnd: 17,
     awakeStart: 7,
     awakeEnd: 23,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -221,6 +231,7 @@ const CITY_DATABASE = [
     workEnd: 17,
     awakeStart: 7,
     awakeEnd: 22,
+    workDays: [1, 2, 3, 4, 5],
   },
 
   {
@@ -231,6 +242,7 @@ const CITY_DATABASE = [
     workEnd: 18,
     awakeStart: 7,
     awakeEnd: 23,
+    workDays: [1, 2, 3, 4, 5],
   },
 ];
 
@@ -596,15 +608,33 @@ function getLocalTime(city) {
    2. STATUS ENGINE
 ========================================================== */
 
-function getStatus(city, hour) {
-  if (hour >= city.workStart && hour < city.workEnd) {
+function getStatus(city, hour, dayOfWeek = null) {
+  /*
+     Work status requires BOTH:
+     1. Local time is inside working hours.
+     2. Local day is a configured workday.
+  */
+
+  const isWorkDay =
+    dayOfWeek === null ||
+    !Array.isArray(city.workDays) ||
+    city.workDays.includes(dayOfWeek);
+
+  if (
+    isWorkDay &&
+    hour >= city.workStart &&
+    hour < city.workEnd
+  ) {
     return {
       type: "work",
       label: "Working",
     };
   }
 
-  if (hour >= city.awakeStart && hour < city.awakeEnd) {
+  if (
+    hour >= city.awakeStart &&
+    hour < city.awakeEnd
+  ) {
     return {
       type: "awake",
       label: "Awake",
@@ -4377,6 +4407,26 @@ function sgAddVerifiedCity(city) {
     return false;
   }
 
+if (!sgIsValidTimezone(city.timezone)) {
+  console.error(
+    "SyncGrid rejected city because its timezone is invalid:",
+    city
+  );
+
+  if (citySearch) {
+    citySearch.value = "";
+    citySearch.placeholder = "Timezone unavailable";
+
+    setTimeout(() => {
+      if (citySearch) {
+        citySearch.placeholder = "Search city...";
+      }
+    }, 2200);
+  }
+
+  return false;
+}
+
   if (sgCityAlreadyAddedLive(city)) {
     return false;
   }
@@ -4408,15 +4458,16 @@ function sgAddVerifiedCity(city) {
 
     population: city.population,
 
-    workStart: 9,
+   workStart: 9,
+workEnd: 17,
 
-    workEnd: 17,
+awakeStart: 7,
+awakeEnd: 23,
 
-    awakeStart: 7,
+workDays: [1, 2, 3, 4, 5],
 
-    awakeEnd: 23,
-
-    source: "live",
+source: "live",
+timezoneSource: "IANA",
   };
 
   App.cities.push(cityObject);
@@ -4807,6 +4858,27 @@ function sgShowInvalidCity() {
 }
 
 /* ==========================================================
+   PHASE 4A
+   TIMEZONE VALIDATION
+========================================================== */
+
+function sgIsValidTimezone(timezone) {
+  if (!timezone || typeof timezone !== "string") {
+    return false;
+  }
+
+  try {
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: timezone,
+    }).format(new Date());
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/* ==========================================================
    18. LIVE CITY DETAILS
 ========================================================== */
 
@@ -4815,12 +4887,16 @@ function sgGetCityTimezoneInfo(city) {
     return null;
   }
 
+  if (!sgIsValidTimezone(city.timezone)) {
+    return null;
+  }
+
+  const now = new Date();
+
   return {
     timezone: city.timezone,
-
     utcOffset: sgGetUTCOffset(city.timezone),
-
-    localTime: getLocalTime(city),
+    localTime: sgGetCityLocalTimeText(city, now),
   };
 }
 
@@ -4994,6 +5070,34 @@ function sgGetCityLocalParts(city, utcDate = new Date()) {
   }
 }
 
+function sgGetCityLocalWeekday(city, utcDate = new Date()) {
+  if (!city?.timezone) {
+    return null;
+  }
+
+  try {
+    const weekday = new Intl.DateTimeFormat("en-US", {
+      timeZone: city.timezone,
+      weekday: "short",
+    }).format(utcDate);
+
+    const map = {
+      Sun: 0,
+      Mon: 1,
+      Tue: 2,
+      Wed: 3,
+      Thu: 4,
+      Fri: 5,
+      Sat: 6,
+    };
+
+    return map[weekday] ?? null;
+  } catch (error) {
+    console.error("Local weekday conversion error:", error);
+    return null;
+  }
+}
+
 /* ==========================================================
    5. GET CITY LOCAL HOUR FOR UTC DATE
 ========================================================== */
@@ -5104,7 +5208,16 @@ function sgGetStatusForUTCHour(city, utcHour, baseDate = new Date()) {
     };
   }
 
-  const status = getStatus(city, localHour);
+  const localWeekday = sgGetCityLocalWeekday(
+  city,
+  utcDate
+);
+
+const status = getStatus(
+  city,
+  localHour,
+  localWeekday
+);
 
   return {
     type: status.type,
