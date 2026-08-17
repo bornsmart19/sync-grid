@@ -620,21 +620,14 @@ function getStatus(city, hour, dayOfWeek = null) {
     !Array.isArray(city.workDays) ||
     city.workDays.includes(dayOfWeek);
 
-  if (
-    isWorkDay &&
-    hour >= city.workStart &&
-    hour < city.workEnd
-  ) {
+  if (isWorkDay && hour >= city.workStart && hour < city.workEnd) {
     return {
       type: "work",
       label: "Working",
     };
   }
 
-  if (
-    hour >= city.awakeStart &&
-    hour < city.awakeEnd
-  ) {
+  if (hour >= city.awakeStart && hour < city.awakeEnd) {
     return {
       type: "awake",
       label: "Awake",
@@ -2424,47 +2417,36 @@ function sgRenderTeams() {
 }
 
 function sgDeleteTeam(teamId) {
-  const team = App.savedTeams.find(
-    (item) => item.id === teamId
-  );
+  const team = App.savedTeams.find((item) => item.id === teamId);
 
   if (!team) return;
 
   const isDefaultTeam =
-    team.id === "global" ||
-    team.id === "developers" ||
-    team.id === "designers";
+    team.id === "global" || team.id === "developers" || team.id === "designers";
 
   if (isDefaultTeam) {
     return;
   }
 
   const confirmed = window.confirm(
-    `Delete "${team.name}"?\n\nThis cannot be undone.`
+    `Delete "${team.name}"?\n\nThis cannot be undone.`,
   );
 
   if (!confirmed) return;
 
   const wasActive = team.name === App.activeTeam;
 
-  App.savedTeams = App.savedTeams.filter(
-    (item) => item.id !== teamId
-  );
+  App.savedTeams = App.savedTeams.filter((item) => item.id !== teamId);
 
   sgSaveTeams();
 
   if (wasActive) {
-    const globalTeam = App.savedTeams.find(
-      (item) => item.id === "global"
-    );
+    const globalTeam = App.savedTeams.find((item) => item.id === "global");
 
     if (globalTeam) {
       App.activeTeam = globalTeam.name;
 
-      saveToStorage(
-        STORAGE_KEYS.activeTeam,
-        App.activeTeam
-      );
+      saveToStorage(STORAGE_KEYS.activeTeam, App.activeTeam);
 
       const selectedCities = globalTeam.cities
         .map((cityName) => findCity(cityName))
@@ -2474,10 +2456,7 @@ function sgDeleteTeam(teamId) {
         ...city,
       }));
 
-      saveToStorage(
-        STORAGE_KEYS.cities,
-        App.cities
-      );
+      saveToStorage(STORAGE_KEYS.cities, App.cities);
     }
   }
 
@@ -2677,6 +2656,27 @@ function sgCreatePlannerEvent() {
    16. PLANNER SUMMARY
 ========================================================== */
 
+function sgDeletePlannerEvent(eventId) {
+  const event = SG_PLANNER_EVENTS.find(
+    (item) => item.id === eventId
+  );
+
+  if (!event) return;
+
+  const confirmed = window.confirm(
+    `Delete "${event.title}"?`
+  );
+
+  if (!confirmed) return;
+
+  SG_PLANNER_EVENTS = SG_PLANNER_EVENTS.filter(
+    (item) => item.id !== eventId
+  );
+
+  sgSavePlannerEvents();
+  sgRenderPlannerSummary();
+}
+
 function sgRenderPlannerSummary() {
   if (!upcomingEvents) return;
 
@@ -2698,27 +2698,46 @@ function sgRenderPlannerSummary() {
 
   const events = [...SG_PLANNER_EVENTS].reverse().slice(0, 5);
 
-  events.forEach((event) => {
-    const item = document.createElement("div");
+  events.forEach((plannerEvent) => {
+  const item = document.createElement("div");
 
-    item.className = "upcoming-event";
+  item.className = "upcoming-event";
 
-    item.innerHTML = `
+  item.innerHTML = `
+    <div class="upcoming-event-info">
+      <strong>
+        ${escapeHTML(plannerEvent.title)}
+      </strong>
 
-            <strong>
-                ${escapeHTML(event.title)}
-            </strong>
+      <small>
+        ${escapeHTML(plannerEvent.team)}
+        ·
+        ${pad(plannerEvent.utcHour)}:00 UTC
+      </small>
+    </div>
 
-            <small>
-                ${escapeHTML(event.team)}
-                ·
-                ${pad(event.utcHour)}:00 UTC
-            </small>
+    <button
+      type="button"
+      class="planner-delete-btn"
+      title="Delete meeting"
+      aria-label="Delete ${escapeHTML(plannerEvent.title)}"
+    >
+      ×
+    </button>
+  `;
 
-        `;
+  const deleteButton = item.querySelector(
+    ".planner-delete-btn"
+  );
 
-    upcomingEvents.appendChild(item);
+  deleteButton.addEventListener("click", (clickEvent) => {
+    clickEvent.stopPropagation();
+
+    sgDeletePlannerEvent(plannerEvent.id);
   });
+
+  upcomingEvents.appendChild(item);
+});
 }
 
 /* ==========================================================
@@ -4407,25 +4426,25 @@ function sgAddVerifiedCity(city) {
     return false;
   }
 
-if (!sgIsValidTimezone(city.timezone)) {
-  console.error(
-    "SyncGrid rejected city because its timezone is invalid:",
-    city
-  );
+  if (!sgIsValidTimezone(city.timezone)) {
+    console.error(
+      "SyncGrid rejected city because its timezone is invalid:",
+      city,
+    );
 
-  if (citySearch) {
-    citySearch.value = "";
-    citySearch.placeholder = "Timezone unavailable";
+    if (citySearch) {
+      citySearch.value = "";
+      citySearch.placeholder = "Timezone unavailable";
 
-    setTimeout(() => {
-      if (citySearch) {
-        citySearch.placeholder = "Search city...";
-      }
-    }, 2200);
+      setTimeout(() => {
+        if (citySearch) {
+          citySearch.placeholder = "Search city...";
+        }
+      }, 2200);
+    }
+
+    return false;
   }
-
-  return false;
-}
 
   if (sgCityAlreadyAddedLive(city)) {
     return false;
@@ -4458,16 +4477,16 @@ if (!sgIsValidTimezone(city.timezone)) {
 
     population: city.population,
 
-   workStart: 9,
-workEnd: 17,
+    workStart: 9,
+    workEnd: 17,
 
-awakeStart: 7,
-awakeEnd: 23,
+    awakeStart: 7,
+    awakeEnd: 23,
 
-workDays: [1, 2, 3, 4, 5],
+    workDays: [1, 2, 3, 4, 5],
 
-source: "live",
-timezoneSource: "IANA",
+    source: "live",
+    timezoneSource: "IANA",
   };
 
   App.cities.push(cityObject);
@@ -5208,16 +5227,9 @@ function sgGetStatusForUTCHour(city, utcHour, baseDate = new Date()) {
     };
   }
 
-  const localWeekday = sgGetCityLocalWeekday(
-  city,
-  utcDate
-);
+  const localWeekday = sgGetCityLocalWeekday(city, utcDate);
 
-const status = getStatus(
-  city,
-  localHour,
-  localWeekday
-);
+  const status = getStatus(city, localHour, localWeekday);
 
   return {
     type: status.type,

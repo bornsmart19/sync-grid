@@ -1740,3 +1740,51 @@ button:disabled {
   background: rgba(255, 80, 80, 0.12);
   color: #ff6b6b;
 }
+
+.upcoming-event {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.upcoming-event-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.upcoming-event-info strong,
+.upcoming-event-info small {
+  display: block;
+}
+
+.planner-delete-btn {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #8f9bad;
+
+  font-size: 21px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.planner-delete-btn:hover {
+  background: rgba(255, 80, 80, 0.12);
+  color: #ff6b6b;
+}
