@@ -9,6 +9,10 @@
 ========================== */
 
 :root {
+  /* ==========================
+       DEFAULT / NIGHT PALETTE
+    ========================== */
+
   --bg: #0b1220;
   --surface: #141c2b;
   --surface-2: #1a2538;
@@ -29,9 +33,114 @@
   --radius: 18px;
   --radius-small: 12px;
 
-  --shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  --shadow: 0 15px 35px rgba(0, 0, 0, 30);
 
-  --transition: 0.25s ease;
+  --transition: 0.4s ease;
+}
+
+/* ==========================================================
+   PHASE 4D — DAYLIGHT PALETTE
+========================================================== */
+
+html[data-time-period="day"] {
+  --bg: #e8f1fb;
+  --surface: #ffffff;
+  --surface-2: #d9e7f7;
+  --surface-3: #c8dbef;
+
+  --border: #b7cbe0;
+
+  --text: #10233d;
+  --muted: #526b86;
+
+  --accent: #2878f0;
+  --accent-hover: #1768df;
+
+  --shadow: 0 12px 30px rgba(45, 82, 120, 0.12);
+}
+
+/* ==========================================================
+   PHASE 4D — MORNING PALETTE
+========================================================== */
+
+html[data-time-period="morning"] {
+  --bg: #eaf5ff;
+  --surface: #ffffff;
+  --surface-2: #dceefe;
+  --surface-3: #c9e3f8;
+
+  --border: #b7d3e9;
+
+  --text: #10243b;
+  --muted: #55708a;
+
+  --accent: #2495e8;
+  --accent-hover: #1684d7;
+
+  --shadow: 0 12px 30px rgba(36, 149, 232, 0.13);
+}
+
+/* ==========================================================
+   PHASE 4D — AFTERNOON PALETTE
+========================================================== */
+
+html[data-time-period="afternoon"] {
+  --bg: #eef3ff;
+  --surface: #ffffff;
+  --surface-2: #dfe8fb;
+  --surface-3: #cedcf5;
+
+  --border: #b9c9e3;
+
+  --text: #142641;
+  --muted: #5a6f8c;
+
+  --accent: #4f7ff7;
+  --accent-hover: #3d6de8;
+
+  --shadow: 0 12px 30px rgba(79, 127, 247, 0.14);
+}
+
+/* ==========================================================
+   PHASE 4D — EVENING PALETTE
+========================================================== */
+
+html[data-time-period="evening"] {
+  --bg: #111827;
+  --surface: #1a2233;
+  --surface-2: #232d42;
+  --surface-3: #303c55;
+
+  --border: #3a4861;
+
+  --text: #ffffff;
+  --muted: #aeb9c9;
+
+  --accent: #f59e6b;
+  --accent-hover: #e88a55;
+
+  --shadow: 0 15px 35px rgba(0, 0, 0, 0.28);
+}
+
+/* ==========================================================
+   PHASE 4D — NIGHT PALETTE
+========================================================== */
+
+html[data-time-period="night"] {
+  --bg: #0b1220;
+  --surface: #141c2b;
+  --surface-2: #1a2538;
+  --surface-3: #243248;
+
+  --border: #2b3a4e;
+
+  --text: #ffffff;
+  --muted: #a0aec0;
+
+  --accent: #4f8cff;
+  --accent-hover: #3a7cff;
+
+  --shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
 }
 
 /* ==========================
@@ -526,7 +635,7 @@ button {
 
   box-shadow: var(--shadow);
 
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* ==========================
@@ -657,18 +766,73 @@ button {
   grid-template-columns: 200px repeat(24, 70px);
 }
 
+.city-info {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
 .city-name {
   display: flex;
-
   align-items: center;
+  position: relative;
 
-  padding-left: 18px;
+  padding-left: 44px;
+  padding-right: 8px;
 
   background: var(--surface-2);
-
   border-radius: 14px 0 0 14px;
-
   font-weight: 600;
+}
+
+.city-delete-btn:hover {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff6b6b;
+}
+
+.city-delete-btn {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 28px;
+  height: 28px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: transparent;
+  color: var(--muted);
+
+  font-size: 22px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  z-index: 10;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.city-delete-btn:hover {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff6b6b;
+}
+
+.city-delete-btn:focus-visible {
+  outline: 2px solid #ff6b6b;
+  outline-offset: 2px;
 }
 
 /* ==========================
@@ -791,9 +955,7 @@ button {
 
 .stats-grid {
   display: grid;
-
-  grid-template-columns: repeat(2, 1fr);
-
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -1154,7 +1316,13 @@ input:focus {
   .city-name {
     font-size: 14px;
 
-    padding-left: 12px;
+    padding-left: 44px;
+  }
+
+  .city-info {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
   }
 }
 
@@ -1787,4 +1955,189 @@ button:disabled {
 .planner-delete-btn:hover {
   background: rgba(255, 80, 80, 0.12);
   color: #ff6b6b;
+}
+
+/* ==========================================================
+   PHASE 4D — COMPLETE LIGHT THEME POLISH
+   Fix hard-coded dark-theme colors
+========================================================== */
+
+html[data-time-period="morning"],
+html[data-time-period="day"],
+html[data-time-period="afternoon"] {
+  /* Main text */
+  --light-text: #102033;
+  --light-muted: #5e7187;
+
+  /* Component surfaces */
+  --light-surface: #ffffff;
+  --light-surface-2: #eaf1f8;
+  --light-border: #cbd8e6;
+}
+
+/* ---------- SIDEBAR ---------- */
+
+html[data-time-period="morning"] .team-item,
+html[data-time-period="day"] .team-item,
+html[data-time-period="afternoon"] .team-item {
+  color: var(--light-text);
+}
+
+html[data-time-period="morning"] .side-btn,
+html[data-time-period="day"] .side-btn,
+html[data-time-period="afternoon"] .side-btn {
+  color: var(--light-text);
+}
+
+html[data-time-period="morning"] .secondary-btn,
+html[data-time-period="day"] .secondary-btn,
+html[data-time-period="afternoon"] .secondary-btn {
+  color: var(--light-text);
+}
+
+html[data-time-period="morning"] .icon-btn,
+html[data-time-period="day"] .icon-btn,
+html[data-time-period="afternoon"] .icon-btn {
+  color: var(--light-text);
+}
+
+/* ---------- TOP BAR ---------- */
+
+html[data-time-period="morning"] .utc-card strong,
+html[data-time-period="day"] .utc-card strong,
+html[data-time-period="afternoon"] .utc-card strong {
+  color: var(--light-text);
+}
+
+/* ---------- SEARCH ---------- */
+
+html[data-time-period="morning"] .search-wrapper input,
+html[data-time-period="day"] .search-wrapper input,
+html[data-time-period="afternoon"] .search-wrapper input {
+  color: var(--light-text);
+}
+
+html[data-time-period="morning"] .search-wrapper input::placeholder,
+html[data-time-period="day"] .search-wrapper input::placeholder,
+html[data-time-period="afternoon"] .search-wrapper input::placeholder {
+  color: var(--light-muted);
+}
+
+/* ---------- MINI STATS ---------- */
+
+html[data-time-period="morning"] .mini-stat strong,
+html[data-time-period="day"] .mini-stat strong,
+html[data-time-period="afternoon"] .mini-stat strong {
+  color: var(--light-text);
+}
+
+/* ---------- UPCOMING EVENTS ---------- */
+
+html[data-time-period="morning"] .event-item strong,
+html[data-time-period="day"] .event-item strong,
+html[data-time-period="afternoon"] .event-item strong {
+  color: var(--light-text);
+}
+
+/* ---------- SEARCH SUGGESTIONS ---------- */
+
+html[data-time-period="morning"] .suggestion-item strong,
+html[data-time-period="day"] .suggestion-item strong,
+html[data-time-period="afternoon"] .suggestion-item strong {
+  color: var(--light-text);
+}
+
+/* ---------- STATUS DIVIDERS ---------- */
+
+html[data-time-period="morning"] .status-item,
+html[data-time-period="day"] .status-item,
+html[data-time-period="afternoon"] .status-item {
+  border-bottom-color: var(--light-border);
+}
+
+/* ---------- DELETE BUTTON ---------- */
+
+/* ---------- DELETE BUTTON ---------- */
+
+html[data-time-period="morning"] .team-delete-btn,
+html[data-time-period="day"] .team-delete-btn,
+html[data-time-period="afternoon"] .team-delete-btn,
+html[data-time-period="morning"] .planner-delete-btn,
+html[data-time-period="day"] .planner-delete-btn,
+html[data-time-period="afternoon"] .planner-delete-btn,
+html[data-time-period="morning"] .city-delete-btn,
+html[data-time-period="day"] .city-delete-btn,
+html[data-time-period="afternoon"] .city-delete-btn {
+  color: #68788c;
+}
+
+/* ---------- LIGHT THEME HOVER ---------- */
+
+html[data-time-period="morning"] .side-btn:hover,
+html[data-time-period="day"] .side-btn:hover,
+html[data-time-period="afternoon"] .side-btn:hover {
+  color: var(--light-text);
+}
+
+html[data-time-period="morning"] .team-item:hover,
+html[data-time-period="day"] .team-item:hover,
+html[data-time-period="afternoon"] .team-item:hover {
+  color: var(--light-text);
+}
+
+/* ---------- LIGHT THEME CARDS ---------- */
+
+html[data-time-period="morning"] .summary-card,
+html[data-time-period="day"] .summary-card,
+html[data-time-period="afternoon"] .summary-card,
+html[data-time-period="morning"] .dashboard-card,
+html[data-time-period="day"] .dashboard-card,
+html[data-time-period="afternoon"] .dashboard-card,
+html[data-time-period="morning"] .timeline-panel,
+html[data-time-period="day"] .timeline-panel,
+html[data-time-period="afternoon"] .timeline-panel {
+  box-shadow: var(--shadow);
+}
+
+/* ---------- LIGHT TIMELINE ---------- */
+
+html[data-time-period="morning"] .hour,
+html[data-time-period="day"] .hour,
+html[data-time-period="afternoon"] .hour {
+  border-color: rgba(16, 32, 51, 0.06);
+}
+
+/* ==========================================================
+   PHASE 4D — RESPONSIVE DASHBOARD CARDS
+========================================================== */
+
+/* Normal desktop */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* Medium screens / laptops */
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tablets / smaller screens */
+@media (max-width: 760px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Prevent individual cards from overflowing */
+.stats-grid > * {
+  min-width: 0;
+}
+
+/* Keep large values from forcing the card wider */
+.stats-grid strong {
+  overflow-wrap: anywhere;
 }

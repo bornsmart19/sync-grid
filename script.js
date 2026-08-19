@@ -415,38 +415,59 @@ if (overlay) {
    14. THEME STATE
 ========================================================== */
 
-function applyTheme() {
-  /*
-       The current locked CSS is primarily dark-theme
-       based. We keep the state ready here so the
-       theme system can be expanded in a later phase.
-    */
+/* ==========================================================
+   PHASE 4D — ADAPTIVE TIME-BASED UI
+========================================================== */
 
-  document.documentElement.dataset.theme = App.theme;
+function getLocalTimePeriod() {
+  const hour = new Date().getHours();
+
+  if (hour >= 5 && hour < 8) {
+    return "morning";
+  }
+
+  if (hour >= 8 && hour < 12) {
+    return "day";
+  }
+
+  if (hour >= 12 && hour < 17) {
+    return "afternoon";
+  }
+
+  if (hour >= 17 && hour < 20) {
+    return "evening";
+  }
+
+  return "night";
+}
+
+function applyAdaptiveTheme() {
+  const period = getLocalTimePeriod();
+
+  document.documentElement.dataset.timePeriod = period;
 
   if (themeToggle) {
-    themeToggle.setAttribute(
-      "aria-label",
-      App.theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
-    );
+    const icons = {
+      morning: "🌅",
+      day: "☀️",
+      afternoon: "🌤️",
+      evening: "🌇",
+      night: "🌙",
+    };
+
+    themeToggle.textContent = icons[period];
+
+    themeToggle.setAttribute("aria-label", `Current time theme: ${period}`);
   }
 }
 
-function toggleTheme() {
-  App.theme = App.theme === "dark" ? "light" : "dark";
+/* Apply immediately */
+applyAdaptiveTheme();
 
-  saveToStorage(STORAGE_KEYS.theme, App.theme);
-
-  applyTheme();
-}
-
-/* ==========================================================
-   15. THEME BUTTON
-========================================================== */
-
-if (themeToggle) {
-  themeToggle.addEventListener("click", toggleTheme);
-}
+/* Update automatically when the time period changes */
+setInterval(() => {
+  applyAdaptiveTheme();
+}, 60 * 1000);
 
 /* ==========================================================
    16. DASHBOARD FOUNDATION
@@ -531,11 +552,9 @@ if (sidebarAddCity) {
 ========================================================== */
 
 function initializeSyncGrid() {
-  loadTheme();
-
   loadInitialCities();
 
-  applyTheme();
+  applyAdaptiveTheme();
 
   startUTCClock();
 
@@ -698,9 +717,7 @@ function createTimelineRow(city) {
   cityLabel.className = "city-name";
 
   cityLabel.innerHTML = `
-
-        <div>
-
+        <div class="city-info">
             <strong>
                 ${escapeHTML(city.name)}
             </strong>
@@ -710,10 +727,29 @@ function createTimelineRow(city) {
             <small>
                 ${escapeHTML(city.country)}
             </small>
-
         </div>
-
     `;
+
+  const deleteButton = document.createElement("button");
+
+  deleteButton.type = "button";
+  deleteButton.className = "city-delete-btn";
+  deleteButton.textContent = "×";
+  deleteButton.title = `Remove ${city.name}`;
+  deleteButton.setAttribute("aria-label", `Remove ${city.name}`);
+
+  deleteButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+
+    App.cities = App.cities.filter((item) => item.name !== city.name);
+
+    localStorage.setItem(STORAGE_KEYS.cities, JSON.stringify(App.cities));
+
+    renderTimelineBody();
+    updateBasicStats();
+  });
+
+  cityLabel.appendChild(deleteButton);
 
   row.appendChild(cityLabel);
 
@@ -1175,27 +1211,6 @@ function removeCity(cityName) {
 /* ==========================================================
    11. CITY ROW CONTEXT MENU
 ========================================================== */
-
-if (timelineBody) {
-  timelineBody.addEventListener("contextmenu", (event) => {
-    const row = event.target.closest(".timeline-row");
-
-    if (!row) return;
-
-    event.preventDefault();
-
-    const cityName = row.dataset.city;
-
-    if (!cityName) return;
-
-    const confirmed = window.confirm(`Remove ${cityName} from SyncGrid?`);
-
-    if (confirmed) {
-      removeCity(cityName);
-    }
-  });
-}
-
 /* ==========================================================
    12. CLOSE SEARCH WHEN CLICKING OUTSIDE
 ========================================================== */
@@ -2657,21 +2672,15 @@ function sgCreatePlannerEvent() {
 ========================================================== */
 
 function sgDeletePlannerEvent(eventId) {
-  const event = SG_PLANNER_EVENTS.find(
-    (item) => item.id === eventId
-  );
+  const event = SG_PLANNER_EVENTS.find((item) => item.id === eventId);
 
   if (!event) return;
 
-  const confirmed = window.confirm(
-    `Delete "${event.title}"?`
-  );
+  const confirmed = window.confirm(`Delete "${event.title}"?`);
 
   if (!confirmed) return;
 
-  SG_PLANNER_EVENTS = SG_PLANNER_EVENTS.filter(
-    (item) => item.id !== eventId
-  );
+  SG_PLANNER_EVENTS = SG_PLANNER_EVENTS.filter((item) => item.id !== eventId);
 
   sgSavePlannerEvents();
   sgRenderPlannerSummary();
@@ -2699,11 +2708,11 @@ function sgRenderPlannerSummary() {
   const events = [...SG_PLANNER_EVENTS].reverse().slice(0, 5);
 
   events.forEach((plannerEvent) => {
-  const item = document.createElement("div");
+    const item = document.createElement("div");
 
-  item.className = "upcoming-event";
+    item.className = "upcoming-event";
 
-  item.innerHTML = `
+    item.innerHTML = `
     <div class="upcoming-event-info">
       <strong>
         ${escapeHTML(plannerEvent.title)}
@@ -2726,18 +2735,16 @@ function sgRenderPlannerSummary() {
     </button>
   `;
 
-  const deleteButton = item.querySelector(
-    ".planner-delete-btn"
-  );
+    const deleteButton = item.querySelector(".planner-delete-btn");
 
-  deleteButton.addEventListener("click", (clickEvent) => {
-    clickEvent.stopPropagation();
+    deleteButton.addEventListener("click", (clickEvent) => {
+      clickEvent.stopPropagation();
 
-    sgDeletePlannerEvent(plannerEvent.id);
+      sgDeletePlannerEvent(plannerEvent.id);
+    });
+
+    upcomingEvents.appendChild(item);
   });
-
-  upcomingEvents.appendChild(item);
-});
 }
 
 /* ==========================================================
@@ -2760,10 +2767,9 @@ const SG_SETTINGS_KEY = "syncgrid_settings";
 
 let SG_SETTINGS = loadFromStorage(SG_SETTINGS_KEY) || {
   notifications: true,
-
   autoRefresh: true,
-
   confirmRemoval: true,
+  timeFormat: "12h",
 };
 
 /* ==========================================================
@@ -2813,6 +2819,8 @@ function sgOpenSettings() {
         autoRefresh: true,
 
         confirmRemoval: true,
+
+        timeFormat: "12h",
       };
 
       break;
@@ -3936,6 +3944,46 @@ function sgOpenSettingsModal() {
 
                     </label>
 
+                    <label
+  style="
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:14px;
+    background:#1A2538;
+    border-radius:12px;
+  "
+>
+  <span>Time format</span>
+
+  <select
+    id="sgTimeFormat"
+    style="
+      width:100%;
+      padding:10px;
+      border-radius:8px;
+      border:1px solid #2B3A4E;
+      background:#0B1220;
+      color:white;
+      font:inherit;
+    "
+  >
+    <option
+      value="12h"
+      ${SG_SETTINGS.timeFormat === "12h" ? "selected" : ""}
+    >
+      12-hour
+    </option>
+
+    <option
+      value="24h"
+      ${SG_SETTINGS.timeFormat === "24h" ? "selected" : ""}
+    >
+      24-hour
+    </option>
+  </select>
+</label>
+
                 </div>
             `,
 
@@ -3962,6 +4010,9 @@ function sgOpenSettingsModal() {
 
           SG_SETTINGS.confirmRemoval =
             document.getElementById("sgConfirmRemoval").checked;
+
+          SG_SETTINGS.timeFormat =
+            document.getElementById("sgTimeFormat").value;
 
           sgSaveSettings();
 
@@ -4794,9 +4845,19 @@ if (citySearch) {
    15. CITY REMOVAL CONFIRMATION
 ========================================================== */
 
+/* ==========================================================
+   CITY DELETE BUTTON
+========================================================== */
+
 if (timelineBody) {
-  timelineBody.addEventListener("contextmenu", (event) => {
-    const row = event.target.closest(".timeline-row");
+  timelineBody.addEventListener("click", (event) => {
+    const deleteButton = event.target.closest(".city-delete-btn");
+
+    if (!deleteButton) return;
+
+    event.stopPropagation();
+
+    const row = deleteButton.closest(".timeline-row");
 
     if (!row) return;
 
@@ -4804,17 +4865,17 @@ if (timelineBody) {
 
     if (!cityName) return;
 
-    event.preventDefault();
-
     let confirmed = true;
 
     if (typeof SG_SETTINGS !== "undefined" && SG_SETTINGS.confirmRemoval) {
       confirmed = window.confirm(`Remove ${cityName} from SyncGrid?`);
     }
 
-    if (confirmed) {
-      removeCity(cityName);
+    if (!confirmed) return;
 
+    removeCity(cityName);
+
+    if (typeof sgSyncActiveTeam === "function") {
       sgSyncActiveTeam();
     }
   });
@@ -5360,9 +5421,7 @@ function sgCreateGlobalTimelineRow(city) {
   const offset = sgGetCityOffset(city);
 
   cityLabel.innerHTML = `
-
-        <div>
-
+        <div class="city-info">
             <strong>
                 ${escapeHTML(city.name)}
             </strong>
@@ -5371,22 +5430,31 @@ function sgCreateGlobalTimelineRow(city) {
 
             <small>
                 ${escapeHTML(city.country || "")}
-
                 ·
-
                 ${escapeHTML(city.timezone)}
-
                 ·
-
                 ${escapeHTML(offset)}
-
                 · Local:
                 ${escapeHTML(currentLocalTime)}
             </small>
-
         </div>
-
     `;
+
+  const deleteButton = document.createElement("button");
+
+  deleteButton.type = "button";
+  deleteButton.className = "city-delete-btn";
+  deleteButton.textContent = "×";
+
+  deleteButton.title = `Remove ${city.name}`;
+  deleteButton.setAttribute("aria-label", `Remove ${city.name}`);
+
+  deleteButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    removeCity(city.name);
+  });
+
+  cityLabel.appendChild(deleteButton);
 
   row.appendChild(cityLabel);
 
