@@ -2141,3 +2141,162 @@ html[data-time-period="afternoon"] .hour {
 .stats-grid strong {
   overflow-wrap: anywhere;
 }
+
+/* ==========================================================
+   PHASE 6 — ADVERTISEMENT SPACE
+========================================================== */
+
+.ad-slot {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--surface-2);
+  border: 1px dashed var(--border);
+
+  border-radius: 14px;
+
+  color: var(--muted);
+
+  text-align: center;
+
+  overflow: hidden;
+}
+
+.ad-slot span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+
+  opacity: 0.7;
+}
+
+.ad-slot div {
+  margin-top: 6px;
+
+  font-size: 12px;
+
+  opacity: 0.55;
+}
+
+/* ---------- TOP BANNER ---------- */
+
+.ad-top {
+  grid-column: 1 / -1;
+
+  width: 100%;
+  min-height: 90px;
+
+  max-width: 970px;
+
+  justify-self: center;
+
+  margin-bottom: 0;
+}
+
+/* ---------- RIGHT BANNER ---------- */
+
+.ad-rail-banner {
+  width: 100%;
+  min-height: 250px;
+}
+
+/* ---------- RIGHT VIDEO ---------- */
+
+.ad-rail-video {
+  width: 100%;
+  min-height: 250px;
+}
+
+/* ---------- AD HOVER ---------- */
+
+.ad-slot:hover {
+  border-color: var(--accent);
+}
+
+/* ==========================================================
+   ADVERTISEMENT — RESPONSIVE
+========================================================== */
+
+@media (max-width: 1200px) {
+  .ad-top {
+    min-height: 80px;
+  }
+
+  .ad-rail-banner,
+  .ad-rail-video {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ad-top {
+    min-height: 70px;
+  }
+
+  .ad-rail-banner,
+  .ad-rail-video {
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ad-top {
+    min-height: 60px;
+  }
+
+  .ad-rail-banner,
+  .ad-rail-video {
+    min-height: 160px;
+  }
+
+  .ad-slot span {
+    font-size: 9px;
+  }
+
+  .ad-slot div {
+    font-size: 11px;
+  }
+}
+
+/* ==========================================================
+   PHASE 6B — AD COLUMN FIX
+========================================================== */
+
+.content-layout {
+  grid-template-columns: minmax(0, 1fr) 360px;
+}
+
+.main-content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.summary-grid {
+  min-width: 0;
+  width: 100%;
+}
+
+.summary-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.right-dashboard {
+  min-width: 0;
+  width: 100%;
+}
+
+/* ==========================================================
+   RESPONSIVE SUMMARY GRID
+========================================================== */
+
+@media (max-width: 1500px) and (min-width: 769px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
