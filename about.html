@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>About Us — SyncGrid</title>
+
+    <meta
+        name="description"
+        content="Learn about SyncGrid, a global world clock and international meeting planner built to make working across time zones easier."
+    >
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="syncgrid-globe.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+        .about-page {
+            min-height: 100vh;
+            padding: 40px 20px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .about-container {
+            width: min(900px, 100%);
+            margin: 0 auto;
+        }
+
+        .about-header {
+            margin-bottom: 32px;
+        }
+
+        .about-header a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .about-header a:hover {
+            text-decoration: underline;
+        }
+
+        .about-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .about-card h1 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: clamp(32px, 5vw, 48px);
+        }
+
+        .about-card h2 {
+            margin-top: 34px;
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+
+        .about-card p {
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .about-feature {
+            padding: 20px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-small);
+        }
+
+        .about-feature strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .about-feature span {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .about-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 12px;
+            padding: 12px 18px;
+
+            border-radius: 10px;
+
+            background: var(--accent);
+            color: #fff;
+
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .about-cta:hover {
+            background: var(--accent-hover);
+        }
+
+        .about-footer {
+            margin-top: 32px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .about-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 700px) {
+            .about-page {
+                padding: 24px 14px;
+            }
+
+            .about-card {
+                padding: 22px;
+            }
+
+            .about-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <main class="about-page">
+
+        <div class="about-container">
+
+            <div class="about-header">
+
+                <a href="index.html">
+                    ← Back to SyncGrid
+                </a>
+
+            </div>
+
+
+            <article class="about-card">
+
+                <h1>About SyncGrid</h1>
+
+                <p>
+                    SyncGrid is a global world clock and international
+                    meeting planner designed to make working across time
+                    zones easier.
+                </p>
+
+                <p>
+                    When people work, study, or collaborate from different
+                    parts of the world, finding a convenient time to connect
+                    can become surprisingly difficult. SyncGrid was created
+                    to make that process simpler.
+                </p>
+
+
+                <h2>Our Purpose</h2>
+
+                <p>
+                    SyncGrid helps users understand when people around the
+                    world are working, awake, or sleeping, and makes it
+                    easier to identify periods when different cities can
+                    overlap.
+                </p>
+
+                <div class="about-features">
+
+                    <div class="about-feature">
+                        <strong>🌍 Global Time</strong>
+
+                        <span>
+                            Compare local times across cities and time zones.
+                        </span>
+                    </div>
+
+
+                    <div class="about-feature">
+                        <strong>🤝 Meeting Planning</strong>
+
+                        <span>
+                            Find practical meeting windows for international
+                            teams and collaborators.
+                        </span>
+                    </div>
+
+
+                    <div class="about-feature">
+                        <strong>🕐 Simple Planning</strong>
+
+                        <span>
+                            Understand global schedules without complicated
+                            calculations.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <h2>Who Is SyncGrid For?</h2>
+
+                <p>
+                    SyncGrid is designed for remote teams, international
+                    businesses, developers, designers, students,
+                    freelancers, clients, and anyone who regularly works
+                    with people in different time zones.
+                </p>
+
+
+                <h2>Our Approach</h2>
+
+                <p>
+                    We believe time-zone planning should be simple,
+                    understandable, and accessible. SyncGrid focuses on
+                    presenting useful information clearly so users can spend
+                    less time calculating time differences and more time
+                    getting things done.
+                </p>
+
+
+                <h2>Built for the Web</h2>
+
+                <p>
+                    SyncGrid is designed as a web-based tool that can be
+                    accessed directly from a browser without requiring a
+                    complicated setup.
+                </p>
+
+                <a
+                    href="index.html"
+                    class="about-cta">
+                    Open SyncGrid
+                </a>
+
+
+                <h2>Get in Touch</h2>
+
+                <p>
+                    Have a question, suggestion, or issue with SyncGrid?
+                    We'd be happy to hear from you.
+                </p>
+
+                <a
+                    href="contact.html"
+                    class="about-cta">
+                    Contact Us
+                </a>
+
+            </article>
+
+
+            <footer class="about-footer">
+
+                <p>
+                    © 2026 SyncGrid
+                </p>
+
+                <p>
+                    <a href="privacy-policy.html">
+                        Privacy Policy
+                    </a>
+                    ·
+                    <a href="terms-of-service.html">
+                        Terms of Service
+                    </a>
+                    ·
+                    <a href="contact.html">
+                        Contact Us
+                    </a>
+                </p>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

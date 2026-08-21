@@ -2395,3 +2395,59 @@ html[data-time-period="afternoon"] .hour {
     font-size: 13px;
   }
 }
+
+.meeting-planner-link {
+  position: absolute;
+
+  top: 4px;
+  left: 12px;
+
+  z-index: 50;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 9px;
+
+  width: auto;
+  min-width: 0;
+
+  border: 1px solid var(--border);
+  border-radius: 7px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.meeting-planner-link:hover {
+  background: var(--surface-2);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.planner-footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    margin-top: 12px;
+}
+
+.planner-footer-links a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.planner-footer-links a:hover {
+    text-decoration: underline;
+}

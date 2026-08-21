@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>International Meeting Planner | SyncGrid</title>
+
+    <meta
+      name="description"
+      content="Use SyncGrid's international meeting planner to compare time zones, working hours, and local times and find a better time for global meetings."
+    />
+
+    <meta name="theme-color" content="#0B1220" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      /* ==========================================================
+           SYNCGRID — INTERNATIONAL MEETING PLANNER
+           PHASE 8B-9
+        ========================================================== */
+
+      .planner-page {
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .planner-nav {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 24px 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        border-bottom: 1px solid var(--border);
+      }
+
+      .planner-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 22px;
+      }
+
+      .planner-logo {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+    overflow: hidden;
+
+    background: transparent;
+}
+
+.planner-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+      .planner-nav-link {
+        color: var(--text);
+        text-decoration: none;
+
+        padding: 10px 16px;
+
+        border: 1px solid var(--border);
+        border-radius: 10px;
+
+        background: var(--surface);
+
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .planner-nav-link:hover {
+        background: var(--surface-2);
+        border-color: var(--accent);
+      }
+
+      .planner-container {
+        width: min(900px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 70px 0 90px;
+      }
+
+      .planner-hero {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+
+      .planner-hero h1 {
+        margin: 0 auto 18px;
+
+        max-width: 800px;
+
+        font-size: clamp(34px, 6vw, 58px);
+        line-height: 1.08;
+        letter-spacing: -1.5px;
+      }
+
+      .planner-hero p {
+        max-width: 700px;
+        margin: 0 auto;
+
+        color: var(--muted);
+
+        font-size: 18px;
+        line-height: 1.7;
+      }
+
+      .planner-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-top: 28px;
+        padding: 13px 22px;
+
+        border-radius: 12px;
+
+        background: var(--accent);
+        color: #ffffff;
+
+        text-decoration: none;
+        font-weight: 700;
+
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .planner-cta:hover {
+        background: var(--accent-hover);
+        transform: translateY(-1px);
+      }
+
+      .planner-section {
+        margin-top: 24px;
+        padding: 28px;
+
+        background: var(--surface);
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+
+        box-shadow: var(--shadow);
+      }
+
+      .planner-section h2 {
+        margin: 0 0 14px;
+
+        font-size: 25px;
+        line-height: 1.3;
+      }
+
+      .planner-section h3 {
+        margin: 26px 0 8px;
+
+        font-size: 18px;
+        line-height: 1.4;
+      }
+
+      .planner-section p {
+        margin: 0;
+
+        color: var(--muted);
+
+        font-size: 15px;
+        line-height: 1.75;
+      }
+
+      .planner-features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+
+        margin-top: 24px;
+      }
+
+      .planner-feature {
+        padding: 20px;
+
+        background: var(--surface-2);
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius-small);
+      }
+
+      .planner-feature strong {
+        display: block;
+        margin-bottom: 8px;
+
+        font-size: 16px;
+      }
+
+      .planner-feature span {
+        color: var(--muted);
+
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .planner-footer {
+        margin-top: 45px;
+
+        text-align: center;
+
+        color: var(--muted);
+
+        font-size: 13px;
+      }
+
+      .planner-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      @media (max-width: 700px) {
+        .planner-nav {
+          padding: 18px 0;
+        }
+
+        .planner-container {
+          padding-top: 48px;
+        }
+
+        .planner-hero {
+          margin-bottom: 36px;
+        }
+
+        .planner-hero h1 {
+          letter-spacing: -0.8px;
+        }
+
+        .planner-hero p {
+          font-size: 16px;
+        }
+
+        .planner-features {
+          grid-template-columns: 1fr;
+        }
+
+        .planner-section {
+          padding: 22px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="planner-page">
+      <nav class="planner-nav">
+        <a href="index.html" class="planner-brand">
+          <span class="planner-logo">
+    <img
+        src="syncgrid-globe.png"
+        alt="SyncGrid"
+    >
+</span>
+          <span> SyncGrid </span>
+        </a>
+
+        <a href="index.html" class="planner-nav-link"> Open SyncGrid </a>
+      </nav>
+
+      <main class="planner-container">
+        <header class="planner-hero">
+          <h1>International Meeting Planner</h1>
+
+          <p>
+            Find a better meeting time for people working across different
+            cities and time zones.
+          </p>
+
+        </header>
+
+        <section class="planner-section">
+          <h2>Plan Meetings Across Time Zones</h2>
+
+          <p>
+            Scheduling an international meeting can be surprisingly difficult. A
+            convenient time for one person may be early morning, late evening,
+            or even the middle of the night for someone else.
+          </p>
+
+          <p style="margin-top: 16px">
+            SyncGrid helps you compare cities, local times, and working hours so
+            you can find a more practical time for everyone involved.
+          </p>
+
+          <div class="planner-features">
+            <div class="planner-feature">
+              <strong> 🌍 Compare Cities </strong>
+
+              <span> View multiple cities and their time zones together. </span>
+            </div>
+
+            <div class="planner-feature">
+              <strong> 🕐 Check Local Times </strong>
+
+              <span>
+                Understand what time a meeting will be for everyone.
+              </span>
+            </div>
+
+            <div class="planner-feature">
+              <strong> 🤝 Find Overlap </strong>
+
+              <span>
+                Identify periods when people are available at the same time.
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section class="planner-section">
+          <h2>How SyncGrid Helps</h2>
+
+          <h3>1. Compare different time zones</h3>
+
+          <p>
+            Add the cities where your team members, clients, or collaborators
+            are located. SyncGrid displays their time zones together on a global
+            timeline.
+          </p>
+
+          <h3>2. Understand working hours</h3>
+
+          <p>
+            The timeline helps you see when people are working, awake, or
+            sleeping, making inconvenient meeting times easier to spot.
+          </p>
+
+          <h3>3. Choose a practical meeting time</h3>
+
+          <p>
+            Use the shared timeline and meeting-overlap information to choose a
+            time that works better across your international team.
+          </p>
+        </section>
+
+        <section class="planner-section">
+          <h2>Who Can Use an International Meeting Planner?</h2>
+
+          <p>
+            SyncGrid can be useful for remote teams, international businesses,
+            developers, designers, students, freelancers, clients, and anyone
+            who regularly coordinates with people in other time zones.
+          </p>
+        </section>
+
+        <footer class="planner-footer">
+          <div class="planner-footer-links">
+
+    <a href="privacy-policy.html">
+        Privacy Policy
+    </a>
+
+    <a href="terms-of-service.html">
+        Terms of Service
+    </a>
+
+    <a href="about.html">
+        About Us
+    </a>
+
+    <a href="contact.html">
+        Contact Us
+    </a>
+
+</div>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
